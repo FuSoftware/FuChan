@@ -9,27 +9,25 @@ PostWidget::PostWidget(Post *post, QWidget *parent)
     QVBoxLayout *layoutMain = new QVBoxLayout;
     gridLayout = new QGridLayout;
 
-    subject = new QLabel(this);
+    labelPostNo = new QLabel(this);
+    labelSize = new QLabel(this);
     comment = new QTextBrowser(this);
     thumb = new ClickableLabel("",0);
 
     /*Layouts*/
-    /*If OP*/
-    if(post_data->isOP)
+    if(post_data->hasAttachement())
     {
-        gridLayout->addWidget(thumb,1,0,2,2);
-        gridLayout->addWidget(subject,0,0,2,1);
-        gridLayout->addWidget(comment,1,2);
-    }
-    /**/
-    else if(post_data->has_attachement)
-    {
-        gridLayout->addWidget(thumb,0,0,2,2);
-        gridLayout->addWidget(comment,0,2);
+        //Row, Column, RowSpan, ColSpan
+        gridLayout->addWidget(labelPostNo,0,0,1,2);
+        gridLayout->addWidget(thumb      ,1,0,3,2);
+        gridLayout->addWidget(labelSize  ,4,0,1,2);
+
+        gridLayout->addWidget(comment    ,0,2,5,1);
     }
     else
     {
-        gridLayout->addWidget(comment,0,0);
+        gridLayout->addWidget(labelPostNo,0,0,1,1);
+        gridLayout->addWidget(comment    ,1,0,3,1);
     }
 
     layoutMain->addLayout(gridLayout);
@@ -50,14 +48,18 @@ PostWidget::~PostWidget()
 
 void PostWidget::load_post()
 {
-    subject->setText(post_data->sub.c_str());
-    comment->setText(post_data->com.c_str());
+    comment->setText(post_data->getCom().c_str());
 
-    if(post_data->has_attachement)
+    labelPostNo->setText(QString::number(post_data->getNo()));
+    labelPostNo->setAlignment(Qt::AlignLeft);
+    labelPostNo->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+
+    if(post_data->hasAttachement())
     {
-        checkFolder(std::string(CACHE_PATH) + post_data->attachement.board + "/thumbs/");
+        labelPostNo->setAlignment(Qt::AlignCenter);
+        checkFolder(std::string(CACHE_PATH) + post_data->getAttachement().getBoard() + "/thumbs/");
         qThread = new QThread(this);
-        worker = new CachingWorker(post_data->attachement.thumb_url.c_str(),strdup(post_data->attachement.thumb_path.c_str()),true,true);
+        worker = new CachingWorker(post_data->getAttachement().getThumbUrl().c_str(),strdup(post_data->getAttachement().getThumbPath().c_str()),true,true);
 
         worker->moveToThread(qThread);
 
@@ -75,7 +77,7 @@ void PostWidget::load_post()
     }
 
     outputInfo("INFO",
-               std::string("Post ") + ULintToString(post_data->no) + std::string(" loaded"),
+               std::string("Post ") + ULintToString(post_data->getNo()) + std::string(" loaded"),
                LEVEL_POST);
 }
 
@@ -84,10 +86,15 @@ void PostWidget::load_thumbnail()
     QSize imageSize;
     imageSize.setWidth(THUMB_MAX_SIZE);
     imageSize.setHeight(THUMB_MAX_SIZE);
-    QPixmap pixmap = QPixmap(post_data->attachement.thumb_path.c_str());
+    QPixmap pixmap = QPixmap(post_data->getAttachement().getThumbPath().c_str());
     thumb->setPixmap(pixmap.scaled(imageSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    thumb->setAlignment(Qt::AlignCenter);
 
     comment->setMaximumHeight(thumb->height());
+
+    labelSize->setText(QString::number(post_data->getAttachement().getWidth()) + QString("x") + QString::number(post_data->getAttachement().getHeight()));
+    labelSize->setAlignment(Qt::AlignCenter);
+
 
     update();
 }

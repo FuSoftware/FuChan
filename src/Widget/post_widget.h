@@ -25,7 +25,8 @@ public slots:
 private:
     QGridLayout *gridLayout;
 
-    QLabel *subject;
+    QLabel *labelPostNo;
+    QLabel *labelSize;
     QTextBrowser *comment;
 
     Post *post_data;
