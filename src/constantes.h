@@ -1,9 +1,9 @@
 #ifndef CONSTANTES
 #define CONSTANTES
 
-#define DEBUG 1
+#define DEBUG 0
 
-#define APP_VERSION 0.11
+#define APP_VERSION 0.12
 #define APP_NAME "FuChan"
 
 

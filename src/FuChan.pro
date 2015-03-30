@@ -29,7 +29,6 @@ SOURCES += main.cpp\
     Widget/post_widget.cpp \
     Widget/clickableLabel.cpp \
     Widget/thread_widget.cpp \
-    board_widget.cpp \
     Widget/board_select_widget.cpp \
     Workers/worker_post.cpp \
     Widget/viewer_widget.cpp \
@@ -61,7 +60,6 @@ HEADERS  += widget.h \
     Widget/post_widget.h \
     Widget/clickableLabel.h \
     Widget/thread_widget.h \
-    board_widget.h \
     Widget/board_select_widget.h \
     Workers/worker_post.h \
     Widget/viewer_widget.h \

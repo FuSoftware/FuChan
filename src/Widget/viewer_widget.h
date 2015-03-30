@@ -19,7 +19,6 @@ public slots:
     void download_picture_persistent();
 
 private:
-
     bool image_loaded;
 
     Post* local_post;
