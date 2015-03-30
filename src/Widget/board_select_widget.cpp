@@ -168,7 +168,7 @@ void BoardSelectWidget::startDownloadThumbnails()
         thread_op[i] = new Post(root["threads"][i]["posts"][0],board);
 
         thumb_thread[i] = new QThread(this);
-        thumb_worker[i] = new CachingWorker(thread_op[i]->attachement.thumb_url.c_str(),strdup(thread_op[i]->attachement.thumb_path.c_str()),true,false,i);
+        thumb_worker[i] = new CachingWorker(thread_op[i]->getAttachement().getThumbUrl().c_str(),strdup(thread_op[i]->getAttachement().getThumbPath().c_str()),true,false,i);
 
         thumb_worker[i]->moveToThread(thumb_thread[i]);
 
@@ -202,17 +202,17 @@ void BoardSelectWidget::loadOP(int index)
     /*Loading new objects*/
     layoutThread[index] = new QHBoxLayout;
 
-    label_thread_no[index] = new QPushButton(ULintToString(thread_op[index]->no).c_str(), this);
+    label_thread_no[index] = new QPushButton(ULintToString(thread_op[index]->getNo()).c_str(), this);
     label_thumbnail[index] = new QLabel(this);
     label_thread_subject[index]= new QTextBrowser(this);
-    label_thread_subject[index]->setText(thread_op[index]->com.c_str());
+    label_thread_subject[index]->setText(thread_op[index]->getCom().c_str());
 
     layoutThread[index]->addWidget(label_thread_no[index]);
 
     /*Loading OP's thumbnail*/
-    if(thread_op[index]->has_attachement)
+    if(thread_op[index]->hasAttachement())
     {
-        QPixmap pixmap = QPixmap(thread_op[index]->attachement.thumb_path.c_str());
+        QPixmap pixmap = QPixmap(thread_op[index]->getAttachement().getThumbPath().c_str());
         label_thumbnail[index]->setPixmap(pixmap.scaled(100,100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         layoutThread[index]->addWidget(label_thumbnail[index]);
     }

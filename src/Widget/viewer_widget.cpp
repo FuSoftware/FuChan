@@ -49,36 +49,34 @@ void ViewerWidget::load_picture(Post* post)
     download_picture(local_post, false);
 
     QSize imageSize;
-    imageSize.setWidth(post->attachement.w);
-    imageSize.setHeight(post->attachement.h);
+    //imageSize.setWidth(post->attachement.getWidth());
+    //imageSize.setHeight(post->attachement.getHeight());
 
     imageSize.setHeight(height());
     imageSize.setWidth(width()-groupBoxInfo->width());
 
 
-    QPixmap pixmap = QPixmap(QString(post->attachement.file_path_cache.c_str()));
+    QPixmap pixmap = QPixmap(QString(post->getAttachement().getFilePathCache().c_str()));
     labelImage->setPixmap(pixmap.scaled(imageSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-    labelInfo[0]->setText(QString("File name : ") + QString(post->attachement.filename.c_str()) +  QString(post->attachement.ext.c_str()));
-    labelInfo[1]->setText(QString("File url  : ") + QString(post->attachement.file_url.c_str()));
-    labelInfo[2]->setText(QString("File tim  : ") + QString(int64ToString(post->attachement.tim).c_str()));
-    labelInfo[3]->setText(QString("File size : ") + QString::number(post->attachement.fsize));;
-    labelInfo[4]->setText(QString("Size      : ") + QString::number(post->attachement.w) + QString("x") + QString::number(post->attachement.h));
+    labelInfo[0]->setText(QString("File name : ") + QString(post->getAttachement().filename.c_str()) +  QString(post->getAttachement().ext.c_str()));
+    labelInfo[1]->setText(QString("File url  : ") + QString(post->getAttachement().getFileUrl().c_str()));
+    labelInfo[2]->setText(QString("File tim  : ") + QString(int64ToString(post->getAttachement().getTim()).c_str()));
+    labelInfo[3]->setText(QString("File size : ") + QString::number(post->getAttachement().fsize));
+    labelInfo[4]->setText(QString("Size      : ") + QString::number(post->getAttachement().getWidth()) + QString("x") + QString::number(post->getAttachement().getHeight()));
 }
 
 void ViewerWidget::download_picture(Post *post, bool download)
 {
     if(download)
     {
-        std::string folder = std::string(DOWNLOAD_PATH) + post->parent_board;
-        checkFolder(folder);
-        cachingFile(post->attachement.file_url.c_str(),strdup(post->attachement.file_path_download.c_str()),true,true);
+        checkFolder(std::string(DOWNLOAD_PATH) + post->getParentBoard());
+        copyFile(post->getAttachement().getFilePathCache(),post->getAttachement().getFilePathDownload());
     }
     else
     {
-        std::string folder = std::string(CACHE_PATH) + post->parent_board + std::string("/images/");
-        checkFolder(folder);
-        cachingFile(post->attachement.file_url.c_str(),strdup(post->attachement.file_path_cache.c_str()),true,true);
+        checkFolder(std::string(CACHE_PATH) + post->getParentBoard() + std::string("/images/"));
+        cachingFile(post->getAttachement().getFileUrl().c_str(),strdup(post->getAttachement().getFilePathCache().c_str()),true,true);
     }
 }
 
