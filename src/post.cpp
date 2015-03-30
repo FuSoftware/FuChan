@@ -62,6 +62,38 @@ void Post::load(Json::Value root, std::string board)
     }
 }
 
+/*----------*/
+/*Getters*/
+
+unsigned long int Post::getNo()
+{
+    return no;
+}
+
+std::string Post::getCom()
+{
+    return com;
+}
+
+bool Post::hasAttachement()
+{
+    return has_attachement;
+}
+
+PostedFile Post::getAttachement()
+{
+    return attachement;
+}
+
+std::string Post::getParentBoard()
+{
+    return parent_board;
+}
+
+
+/*----------*/
+/*Setters*/
+
 void Post::setOP(bool state)
 {
     isOP = state;

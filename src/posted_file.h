@@ -16,18 +16,34 @@ public:
 
     void loadFromJSON(Json::Value root, std::string board);
 
+    /*Getters*/
+    int64_t getTim();
+    int getWidth();
+    int getHeight();
+
+    std::string getFileUrl();
+    std::string getFilePathCache();
+    std::string getFilePathDownload();
+    std::string getThumbUrl();
+    std::string getThumbPath();
+    std::string getBoard();
+
+    /*Setters*/
+
     /*Image*/
-    int64_t tim;//Renamed filename	UNIX timestamp + milliseconds
     std::string filename;//Original filename
     std::string ext;//File extension
     int fsize;//File size
     std::string md5;//File MD5
-    int w;//Image width
-    int h;//Image height
     int tn_w;//Thumb width
     int tn_h;//Thumb height
     bool filedeleted;
     bool spoiler;
+
+private:
+    int64_t tim;//Renamed filename	UNIX timestamp + milliseconds
+    int w;//Image width
+    int h;//Image height
 
     std::string file_url;
     std::string file_path_cache;
@@ -35,8 +51,6 @@ public:
     std::string thumb_url;
     std::string thumb_path;
     std::string board;
-
-private:
 };
 
 #endif // POSTEDFILE_H

@@ -15,6 +15,14 @@ public:
     void load(Json::Value root, std::string board);
     void setOP(bool state);
 
+    /*Getters*/
+    unsigned long int getNo();
+    std::string getCom();
+    bool hasAttachement();
+    PostedFile getAttachement();
+    std::string getParentBoard();
+
+private:
     PostedFile attachement;
     bool has_attachement;
     std::string parent_board;
@@ -50,8 +58,6 @@ public:
     std::string semantic_url;
 
     bool isOP;
-
-private:
 };
 /*
 capcode_replies	array	Capcode user replies?	array of capcode type and post IDs	{"admin":[1234,1267]}
