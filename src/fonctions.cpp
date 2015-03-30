@@ -4,6 +4,14 @@
 #include <QFile>
 #include <QDir>
 
+void copyFile(std::string source, std::string dest)
+{
+    std::ifstream  src(source, std::ios::binary);
+    std::ofstream  dst(dest,   std::ios::binary);
+
+    dst << src.rdbuf();
+}
+
 bool isPair(int number)
 {
     if(number & 1)

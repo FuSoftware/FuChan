@@ -11,6 +11,8 @@
 #include <fstream>
 #include <sstream>
 
+void copyFile(std::string source, std::string dest);
+
 bool isPair(int number);
 void checkFolder(std::string path);
 
