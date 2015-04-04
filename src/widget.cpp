@@ -29,11 +29,19 @@ Widget::Widget(QWidget *parent)
     setMinimumWidth(1024);
 
     connect(select_widget,SIGNAL(load_query(int)),this,SLOT(loadThread(int)));
+    connect(select_widget,SIGNAL(load_query()),this,SLOT(loadThread()));
 }
 
 Widget::~Widget()
 {
 
+}
+
+void Widget::loadThread()
+{
+    thread_widget = new ThreadWidget(select_widget->getBoard().c_str(),select_widget->getThread(),false,this);
+
+    tab_widget->addTab(thread_widget,QString("/") +QString(select_widget->getBoard().c_str()) +QString("/") + QString::number(select_widget->getThread()));
 }
 
 void Widget::loadThread(int thread_index)

@@ -19,11 +19,15 @@ public:
     std::string getBoard();
     int getThreadIDFromIndex(int index);
 
+    int getThread();
+
 signals:
     void load_query(int thread_index);
+    void load_query();
 
 public slots:
     void thread_load_toggled(int i);
+    void thread_load_toggled();
     void startLoadingOPs(int i);
     void startLoadingOPs();
     void startDownloadThumbnails();
@@ -38,12 +42,20 @@ private:
     int loaded_posts;
 
     QSignalMapper *mapper;
+
+    QVBoxLayout *searchLayout;
+    QHBoxLayout *layoutTop;
+
+    QHBoxLayout *layoutBoard;
     QLabel *label_board;
     QLineEdit *line_edit_board;
     QComboBox *comboBoxPage;
 
+    QHBoxLayout *layoutManualThread;
+    QLabel *labelThread;
+    QLineEdit *lineEditThread;
+
     QVBoxLayout *mainLayout;
-    QHBoxLayout *layoutBoard;
 
     QVBoxLayout *layoutProgress;
     QProgressBar *progressBar;

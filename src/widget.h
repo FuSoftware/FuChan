@@ -31,6 +31,7 @@ public:
 
 public slots:
     void loadThread(int thread_index);
+    void loadThread();
 
 private:
     BoardSelectWidget *select_widget;

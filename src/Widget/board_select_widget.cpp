@@ -24,6 +24,17 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
     layoutBoard->addWidget(line_edit_board);
     layoutBoard->addWidget(comboBoxPage);
 
+    layoutManualThread = new QHBoxLayout;
+    labelThread = new QLabel("(Optional) Enter a thread to load",this);
+    lineEditThread = new QLineEdit(this);
+
+    layoutManualThread->addWidget(labelThread);
+    layoutManualThread->addWidget(lineEditThread);
+
+    searchLayout = new QVBoxLayout;
+    searchLayout->addLayout(layoutBoard);
+    searchLayout->addLayout(layoutManualThread);
+
     layoutProgress = new QVBoxLayout;
     progressBar = new QProgressBar(this);
     progresslabel = new QLabel("Search a board",this);
@@ -33,7 +44,9 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
     progresslabel->setMaximumHeight(24);
     progressBar->setMaximumHeight(24);
 
-    layoutBoard->addLayout(layoutProgress);
+    layoutTop = new QHBoxLayout;
+    layoutTop->addLayout(searchLayout);
+    layoutTop->addLayout(layoutProgress);
     
     w = new QWidget(this);
     layoutThreads = new QGridLayout;
@@ -53,7 +66,7 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
         layoutThread[i]->addWidget(label_thread_no[i]);
 
         QPixmap pixmap = QPixmap(LOADING_LOGO_PATH);
-        label_thumbnail[i]->setPixmap(pixmap.scaled(100,100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        label_thumbnail[i]->setPixmap(pixmap.scaled(90,90, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         layoutThread[i]->addWidget(label_thumbnail[i]);
 
         layoutThread[i]->addWidget(label_thread_subject[i]);
@@ -73,12 +86,13 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
     }
 
     /*Assignation des layouts sur le layout principal*/
-    mainLayout->addLayout(layoutBoard);
+    mainLayout->addLayout(layoutTop);
     mainLayout->addWidget(w);
     
     setLayout(mainLayout);
 
     connect(line_edit_board,SIGNAL(returnPressed()),this,SLOT(startLoadingOPs()));
+    connect(lineEditThread,SIGNAL(returnPressed()),this,SLOT(thread_load_toggled()));
     connect(comboBoxPage,SIGNAL(currentIndexChanged(int)),this,SLOT(startLoadingOPs(int)));
     connect(mapper, SIGNAL(mapped(int)), this, SLOT(thread_load_toggled(int)));
 }
@@ -86,6 +100,11 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
 BoardSelectWidget::~BoardSelectWidget()
 {
 
+}
+
+void BoardSelectWidget::thread_load_toggled()
+{
+    emit load_query();
 }
 
 void BoardSelectWidget::thread_load_toggled(int i)
@@ -96,6 +115,11 @@ void BoardSelectWidget::thread_load_toggled(int i)
 std::string BoardSelectWidget::getBoard()
 {
     return line_edit_board->text().toStdString();
+}
+
+int BoardSelectWidget::getThread()
+{
+    return lineEditThread->text().toInt();
 }
 
 int BoardSelectWidget::getThreadIDFromIndex(int index)
