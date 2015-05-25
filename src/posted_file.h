@@ -7,6 +7,8 @@
 #include "fonctions.h"
 #include "constantes.h"
 
+#include "stats.h"
+
 
 class PostedFile
 {
@@ -27,6 +29,7 @@ public:
     std::string getThumbUrl();
     std::string getThumbPath();
     std::string getBoard();
+    std::string getFileNameExt();
 
     /*Setters*/
 
@@ -51,6 +54,7 @@ private:
     std::string thumb_url;
     std::string thumb_path;
     std::string board;
+    std::string file_name_ext;
 };
 
 #endif // POSTEDFILE_H

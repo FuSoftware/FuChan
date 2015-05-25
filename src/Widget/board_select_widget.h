@@ -9,6 +9,12 @@
 #include "clickableLabel.h"
 #include "Workers/caching_worker.h"
 
+#include <vector>
+#include <ostream>
+#include <iomanip>
+
+#include "stats.h"
+
 class BoardSelectWidget : public QWidget
 {
     Q_OBJECT
@@ -16,10 +22,12 @@ public:
     explicit BoardSelectWidget(QWidget *parent = 0);
     ~BoardSelectWidget();
 
+    std::string generateBoardLabel(std::string board, std::string title);
     std::string getBoard();
     int getThreadIDFromIndex(int index);
 
     int getThread();
+    bool getPicsOnly();
 
 signals:
     void load_query(int thread_index);
@@ -28,12 +36,15 @@ signals:
 public slots:
     void thread_load_toggled(int i);
     void thread_load_toggled();
+    void startLoadingOPs(QString string);
     void startLoadingOPs(int i);
     void startLoadingOPs();
     void startDownloadThumbnails();
     void loadOP(int index);
     
 private:
+    std::vector<std::string> board_labels;
+    std::vector<std::string> board_list;
     std::string url;
     std::string outfilename;
     std::string board;
@@ -48,8 +59,9 @@ private:
 
     QHBoxLayout *layoutBoard;
     QLabel *label_board;
-    QLineEdit *line_edit_board;
+    QComboBox *combo_box_board;
     QComboBox *comboBoxPage;
+    QCheckBox *check_box_pic_only;
 
     QHBoxLayout *layoutManualThread;
     QLabel *labelThread;

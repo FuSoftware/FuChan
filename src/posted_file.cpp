@@ -34,8 +34,12 @@ void PostedFile::loadFromJSON(Json::Value root, std::string board)
     file_path_cache = std::string(CACHE_PATH) + board + "/images/" + int64ToString(tim) + ext;
     file_path_download = std::string(DOWNLOAD_PATH) + board + "/" + int64ToString(tim) + ext;
 
+    file_name_ext = int64ToString(tim) + ext;
+
     //checkFolder(std::string(CACHE_PATH) + board + "/thumbs/");
     //cachingFile(thumb_url.c_str(),strdup(thumb_path.c_str()),true,true);
+
+    increaseThumbLoaded();
 }
 
 /*-------------------------*/
@@ -78,5 +82,10 @@ std::string PostedFile::getThumbPath()
 std::string PostedFile::getBoard()
 {
     return board;
+}
+
+std::string PostedFile::getFileNameExt()
+{
+    return file_name_ext;
 }
 

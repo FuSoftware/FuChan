@@ -5,6 +5,8 @@
 #include "json/json.h"
 #include "posted_file.h"
 
+#include "stats.h"
+
 class Post
 {
 public:

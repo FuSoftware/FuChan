@@ -60,6 +60,8 @@ void Post::load(Json::Value root, std::string board)
     {
         has_attachement = false;
     }
+
+    increasePostsLoaded();
 }
 
 /*----------*/

@@ -2,43 +2,59 @@
 
 #define THUMB_MAX_SIZE 200
 
-PostWidget::PostWidget(Post *post, QWidget *parent)
+PostWidget::PostWidget(Post *post, bool pic_only, QWidget *parent)
 {
     setParent(parent);
     post_data = post;
+    this->pic_only = pic_only;
     QVBoxLayout *layoutMain = new QVBoxLayout;
     gridLayout = new QGridLayout;
 
-    labelPostNo = new QLabel(this);
     labelSize = new QLabel(this);
-    comment = new QTextBrowser(this);
     thumb = new ClickableLabel("",0);
 
-    /*Layouts*/
-    if(post_data->hasAttachement())
-    {
-        //Row, Column, RowSpan, ColSpan
-        gridLayout->addWidget(labelPostNo,0,0,1,2);
-        gridLayout->addWidget(thumb      ,1,0,3,2);
-        gridLayout->addWidget(labelSize  ,4,0,1,2);
+    labelPostNo = new QLabel(this);
+    comment = new QTextBrowser(this);
 
-        gridLayout->addWidget(comment    ,0,2,5,1);
+    /*Layouts*/
+    if(pic_only)
+    {
+        gridLayout->addWidget(thumb      ,0,0,3,2);
+        gridLayout->addWidget(labelSize  ,3,0,1,2);
+
+        //thumb->setMaximumSize(THUMB_MAX_SIZE*2,THUMB_MAX_SIZE);
+        thumb->setMinimumSize(THUMB_MAX_SIZE*2,THUMB_MAX_SIZE);
+
+        labelPostNo->hide();
+        comment->hide();
     }
     else
     {
-        gridLayout->addWidget(labelPostNo,0,0,1,1);
-        gridLayout->addWidget(comment    ,1,0,3,1);
+
+        if(post_data->hasAttachement())
+        {
+            //Row, Column, RowSpan, ColSpan
+            gridLayout->addWidget(labelPostNo,0,0,1,2);
+            gridLayout->addWidget(thumb      ,1,0,3,2);
+            gridLayout->addWidget(labelSize  ,4,0,1,2);
+
+            gridLayout->addWidget(comment    ,0,2,5,1);
+        }
+        else
+        {
+            gridLayout->addWidget(labelPostNo,0,0,1,1);
+            gridLayout->addWidget(comment    ,1,0,3,1);
+        }
+
+        comment->setMaximumSize(width() - THUMB_MAX_SIZE,THUMB_MAX_SIZE);
+        comment->updateGeometry();
     }
 
     layoutMain->addLayout(gridLayout);
     layoutMain->addItem(new QSpacerItem(0,10, QSizePolicy::Expanding, QSizePolicy::Expanding));
 
-    comment->setMaximumSize(width() - THUMB_MAX_SIZE,THUMB_MAX_SIZE);
-
     setLayout(layoutMain);
     load_post();
-
-    comment->updateGeometry();
 }
 
 PostWidget::~PostWidget()
@@ -49,7 +65,6 @@ PostWidget::~PostWidget()
 void PostWidget::load_post()
 {
     comment->setText(post_data->getCom().c_str());
-
     labelPostNo->setText(QString::number(post_data->getNo()));
     labelPostNo->setAlignment(Qt::AlignLeft);
     labelPostNo->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
@@ -57,6 +72,7 @@ void PostWidget::load_post()
     if(post_data->hasAttachement())
     {
         labelPostNo->setAlignment(Qt::AlignCenter);
+
         checkFolder(std::string(CACHE_PATH) + post_data->getAttachement().getBoard() + "/thumbs/");
         qThread = new QThread(this);
         worker = new CachingWorker(post_data->getAttachement().getThumbUrl().c_str(),strdup(post_data->getAttachement().getThumbPath().c_str()),true,true);
@@ -94,7 +110,6 @@ void PostWidget::load_thumbnail()
 
     labelSize->setText(QString::number(post_data->getAttachement().getWidth()) + QString("x") + QString::number(post_data->getAttachement().getHeight()));
     labelSize->setAlignment(Qt::AlignCenter);
-
 
     update();
 }

@@ -39,14 +39,14 @@ Widget::~Widget()
 
 void Widget::loadThread()
 {
-    thread_widget = new ThreadWidget(select_widget->getBoard().c_str(),select_widget->getThread(),false,this);
+    thread_widget = new ThreadWidget(select_widget->getBoard().c_str(),select_widget->getThread(),false,select_widget->getPicsOnly(), this);
 
     tab_widget->addTab(thread_widget,QString("/") +QString(select_widget->getBoard().c_str()) +QString("/") + QString::number(select_widget->getThread()));
 }
 
 void Widget::loadThread(int thread_index)
 {
-    thread_widget = new ThreadWidget(select_widget->getBoard().c_str(),select_widget->getThreadIDFromIndex(thread_index),false,this);
+    thread_widget = new ThreadWidget(select_widget->getBoard().c_str(),select_widget->getThreadIDFromIndex(thread_index),false,select_widget->getPicsOnly(),this);
 
     tab_widget->addTab(thread_widget,QString("/") +QString(select_widget->getBoard().c_str()) +QString("/") + QString::number(select_widget->getThreadIDFromIndex(thread_index)));
 }
@@ -77,7 +77,7 @@ void Widget::loadFavourites()
     int i = 0;
     while(root[i]["board"] != Json::nullValue)
     {
-        thread_widget = new ThreadWidget(root[i]["board"].asCString(),root[i]["id"].asInt(),true,this);
+        thread_widget = new ThreadWidget(root[i]["board"].asCString(),root[i]["id"].asInt(),true,false,this);
 
         tab_widget->addTab(thread_widget,QString("/") +QString(root[i]["board"].asCString()) +QString("/") + QString::number(root[i]["id"].asInt()));
 

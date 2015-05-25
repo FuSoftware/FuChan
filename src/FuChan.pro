@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     Widget/closable_tab_widget.cpp \
     Widget/option_widget.cpp \
     fileutils.cpp \
-    Workers/caching_worker.cpp
+    Workers/caching_worker.cpp \
+    stats.cpp
 
 HEADERS  += widget.h \
     fonctions_json.h \
@@ -67,7 +68,8 @@ HEADERS  += widget.h \
     Widget/closable_tab_widget.h \
     Widget/option_widget.h \
     fileutils.h \
-    Workers/caching_worker.h
+    Workers/caching_worker.h \
+    stats.h
 
 DISTFILES += \
     json/sconscript

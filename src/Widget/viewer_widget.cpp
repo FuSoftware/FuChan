@@ -60,10 +60,12 @@ void ViewerWidget::load_picture(Post* post)
     labelImage->setPixmap(pixmap.scaled(imageSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
     labelInfo[0]->setText(QString("File name : ") + QString(post->getAttachement().filename.c_str()) +  QString(post->getAttachement().ext.c_str()));
-    labelInfo[1]->setText(QString("File url  : ") + QString(post->getAttachement().getFileUrl().c_str()));
+    labelInfo[1]->setText(QString("File URL  : <a href=\"") + QString(post->getAttachement().getFileUrl().c_str()) + QString("\">Link</a>"));
     labelInfo[2]->setText(QString("File tim  : ") + QString(int64ToString(post->getAttachement().getTim()).c_str()));
     labelInfo[3]->setText(QString("File size : ") + QString::number(post->getAttachement().fsize));
     labelInfo[4]->setText(QString("Size      : ") + QString::number(post->getAttachement().getWidth()) + QString("x") + QString::number(post->getAttachement().getHeight()));
+
+    increaseViewedPicture();
 }
 
 void ViewerWidget::download_picture(Post *post, bool download)
@@ -72,6 +74,7 @@ void ViewerWidget::download_picture(Post *post, bool download)
     {
         checkFolder(std::string(DOWNLOAD_PATH) + post->getParentBoard());
         copyFile(post->getAttachement().getFilePathCache(),post->getAttachement().getFilePathDownload());
+        increaseDownloadedPicture();
     }
     else
     {

@@ -12,7 +12,7 @@ class PostWidget : public QWidget
     Q_OBJECT
 
 public:
-    PostWidget(Post *post, QWidget *parent = 0);
+    PostWidget(Post *post, bool pic_only, QWidget *parent = 0);
     ~PostWidget();
     void load_post();
     void setCommentBoxPolicy(QSizePolicy::Policy policyH, QSizePolicy::Policy policyV);
@@ -33,6 +33,8 @@ private:
 
     QThread *qThread;
     CachingWorker *worker;
+
+    bool pic_only;
 };
 
 #endif // POSTWIDGET_H

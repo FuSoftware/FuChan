@@ -3,6 +3,9 @@
 
 BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
 {
+    Json::Value board_root = loadJSONFile(BOARD_LIST_PATH);
+    int k = 0;
+
     mapper = new QSignalMapper(this);
     setParent(parent);
     
@@ -10,19 +13,30 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
     layoutBoard = new QHBoxLayout;
     
     label_board = new QLabel("Board",this);
-    line_edit_board = new QLineEdit(this);
+    combo_box_board = new QComboBox(this);
     comboBoxPage = new QComboBox(this);
+    check_box_pic_only = new QCheckBox("Pics Only",this);
+
+    while(board_root["boards"][k].isObject())
+    {
+        board_labels.push_back(generateBoardLabel(board_root["boards"][k]["board"].asString(), board_root["boards"][k]["title"].asString()));
+        board_list.push_back(board_root["boards"][k]["board"].asString());
+        combo_box_board->addItem(QString(board_labels.at(k).c_str()));
+        k++;
+    }
 
     for(int i=0;i<10;i++)
     {
         comboBoxPage->addItem(QString::number(i+1));
     }
 
+    //combo_box_board->setEditable(true);
     comboBoxPage->setEditable(true);
 
     layoutBoard->addWidget(label_board);
-    layoutBoard->addWidget(line_edit_board);
+    layoutBoard->addWidget(combo_box_board);
     layoutBoard->addWidget(comboBoxPage);
+    layoutBoard->addWidget(check_box_pic_only);
 
     layoutManualThread = new QHBoxLayout;
     labelThread = new QLabel("(Optional) Enter a thread to load",this);
@@ -91,7 +105,7 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
     
     setLayout(mainLayout);
 
-    connect(line_edit_board,SIGNAL(returnPressed()),this,SLOT(startLoadingOPs()));
+    connect(combo_box_board,SIGNAL(currentTextChanged(QString)),this,SLOT(startLoadingOPs(QString)));
     connect(lineEditThread,SIGNAL(returnPressed()),this,SLOT(thread_load_toggled()));
     connect(comboBoxPage,SIGNAL(currentIndexChanged(int)),this,SLOT(startLoadingOPs(int)));
     connect(mapper, SIGNAL(mapped(int)), this, SLOT(thread_load_toggled(int)));
@@ -100,6 +114,13 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
 BoardSelectWidget::~BoardSelectWidget()
 {
 
+}
+
+std::string BoardSelectWidget::generateBoardLabel(std::string board, std::string title)
+{
+    std::ostringstream oss;
+    oss << std::setw(3) << std::setiosflags(std::ios_base::left) << board  << " - " << title;
+    return oss.str();
 }
 
 void BoardSelectWidget::thread_load_toggled()
@@ -114,7 +135,12 @@ void BoardSelectWidget::thread_load_toggled(int i)
 
 std::string BoardSelectWidget::getBoard()
 {
-    return line_edit_board->text().toStdString();
+    return board_list.at(combo_box_board->currentIndex());
+}
+
+bool BoardSelectWidget::getPicsOnly()
+{
+    return check_box_pic_only->isChecked();
 }
 
 int BoardSelectWidget::getThread()
@@ -127,6 +153,17 @@ int BoardSelectWidget::getThreadIDFromIndex(int index)
     return label_thread_no[index]->text().toInt();
 }
 
+void BoardSelectWidget::startLoadingOPs(QString string)
+{
+    for(int i=0;i<combo_box_board->count();i++)
+    {
+        if(string.compare(combo_box_board->itemText(i)) == 0)
+        {
+            startLoadingOPs();
+        }
+    }
+}
+
 void BoardSelectWidget::startLoadingOPs(int i)
 {
     startLoadingOPs();
@@ -135,7 +172,7 @@ void BoardSelectWidget::startLoadingOPs(int i)
 void BoardSelectWidget::startLoadingOPs()
 {
     progresslabel->setText(QString("Downloading board index"));
-    board = line_edit_board->text().toStdString();
+    board = getBoard();
     page = comboBoxPage->currentText().toInt();
 
     //http://a.4cdn.org/board/pagenumber.json
@@ -160,6 +197,9 @@ void BoardSelectWidget::startLoadingOPs()
     connect(qThread, SIGNAL(finished()), qThread, SLOT(deleteLater()));
 
     qThread->start();
+
+    increaseBoardView(board);
+    increaseSearchCount();
 }
 
 void BoardSelectWidget::startDownloadThumbnails()

@@ -6,6 +6,8 @@
 #include "constantes.h"
 #include "post.h"
 
+#include "stats.h"
+
 class Thread
 {
 public:

@@ -5,6 +5,7 @@
 #include <QtWidgets>
 
 #include "post.h"
+#include "stats.h"
 
 class ViewerWidget: public QWidget
 {

@@ -56,6 +56,8 @@ void Thread::load(std::string board, int thread_number)
                LEVEL_THREAD);
     board_id = board;
     thread_id = thread_number;
+
+    increaseThreadLoaded();
 }
 
 int Thread::getPostCount()

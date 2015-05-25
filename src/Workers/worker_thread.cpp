@@ -16,7 +16,7 @@ WorkerThread::~WorkerThread()
 // --- PROCESS ---
 void WorkerThread::process()
 {
-    parent_thread->posts[post_index] = new PostWidget(parent_thread->thread->getPost(post_index));
+    parent_thread->posts[post_index] = new PostWidget(parent_thread->thread->getPost(post_index),false);
 
     if(post_index == 0)
     {
