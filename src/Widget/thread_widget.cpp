@@ -205,7 +205,7 @@ void ThreadWidget::dump_thread()
             outfilename = folder + thread->getPost(i)->getAttachement().getFileNameExt();
 
             qThread[i] = new QThread(this);
-            worker[i] = new CachingWorker(thread->getPost(i)->getAttachement().getFileUrl().c_str(),strdup(outfilename.c_str()),true,false);
+            worker[i] = new CachingWorker(thread->getPost(i)->getAttachement().getFileUrl().c_str(),strdup(outfilename.c_str()),true,true);
 
             worker[i]->moveToThread(qThread[i]);
 
