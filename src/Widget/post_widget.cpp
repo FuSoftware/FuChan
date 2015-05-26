@@ -38,7 +38,11 @@ PostWidget::PostWidget(Post *post, bool pic_only, QWidget *parent)
             gridLayout->addWidget(thumb      ,1,0,3,2);
             gridLayout->addWidget(labelSize  ,4,0,1,2);
 
-            gridLayout->addWidget(comment    ,0,2,5,1);
+            if(!post_data->getCom().empty())
+            {
+                gridLayout->addWidget(comment,0,2,5,1);
+            }
+
         }
         else
         {
