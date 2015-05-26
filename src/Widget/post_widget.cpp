@@ -42,6 +42,10 @@ PostWidget::PostWidget(Post *post, bool pic_only, QWidget *parent)
             {
                 gridLayout->addWidget(comment,0,2,5,1);
             }
+            else
+            {
+                comment->hide();
+            }
 
         }
         else
