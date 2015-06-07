@@ -36,8 +36,8 @@ void Thread::load(std::string board, int thread_number)
 
     while(root["posts"][i] != Json::nullValue)
     {
-        posts[i] = new Post(root["posts"][i],board);
-        posts_id[i] = root["posts"][i]["no"].asInt();
+        post_list.push_back(new Post(root["posts"][i],board));
+        posts_ids.push_back(root["posts"][i]["no"].asInt());
         i++;
         if(i>MAX_POST_NUMBER){exit(1);}
     }
@@ -46,8 +46,8 @@ void Thread::load(std::string board, int thread_number)
 
     for(int j=i;j<MAX_POST_NUMBER;j++)
     {
-        posts_json[j] = Json::nullValue;
-        posts_id[j] = 0;
+        posts_json.assign(j,Json::nullValue);
+        posts_ids.assign(j, 0);
     }
 
     std::string output = std::string("Thread ") + intToString(thread_number) + std::string(" from ") + board + std::string(" loaded.");
@@ -67,6 +67,10 @@ int Thread::getPostCount()
 
 Post* Thread::getPost(int i)
 {
-    return posts[i];
+    return post_list.at(i);
 }
 
+std::vector<Post*> Thread::getPostList()
+{
+    return post_list;
+}

@@ -54,6 +54,7 @@ PostWidget::PostWidget(Post *post, bool pic_only, QWidget *parent)
             gridLayout->addWidget(comment    ,1,0,3,1);
         }
 
+        thumb->setMinimumHeight(THUMB_MAX_SIZE);
         comment->setMaximumSize(width() - THUMB_MAX_SIZE,THUMB_MAX_SIZE);
         comment->updateGeometry();
     }

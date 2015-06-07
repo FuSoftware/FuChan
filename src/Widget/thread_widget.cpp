@@ -7,7 +7,6 @@ ThreadWidget::ThreadWidget(std::string board, int thread_number, bool favourite,
     this->pics_only = pics_only;
     QHBoxLayout *layoutButtons = new QHBoxLayout;
     mapper = new QSignalMapper;
-    mapper_dump = new QSignalMapper;
     thread_board = board;
     thread_id = thread_number;
 
@@ -46,8 +45,6 @@ ThreadWidget::ThreadWidget(std::string board, int thread_number, bool favourite,
     connect(push_button_favourite,SIGNAL(toggled(bool)),this,SLOT(toggleFavourite(bool)));
 
     connect(mapper, SIGNAL(mapped(int)), this, SLOT(setViewer(int)));
-
-    connect(mapper_dump, SIGNAL(mapped(int)), this, SLOT(download_finished(int)));
 
     load();
 }
@@ -193,54 +190,31 @@ void ThreadWidget::setViewer(int sender)
 void ThreadWidget::dump_thread()
 {
     std::string folder = std::string(DOWNLOAD_PATH) + thread_board + "/thread_" + intToString(thread_id) + "/";
-    std::string outfilename;
 
-    download_started = 0;
-    download_finished_count = 0;
+    QThread *qThread = new QThread(this);
+    ThreadDumpingWorker *worker = new ThreadDumpingWorker(thread->getPostList(),folder);
 
-    for(int i=0;i<thread->getPostCount();i++)
-    {
-        if(thread->getPost(i)->hasAttachement())
-        {
-            outfilename = folder + thread->getPost(i)->getAttachement().getFileNameExt();
+    worker ->moveToThread(qThread);
 
-            qThread[i] = new QThread(this);
-            worker[i] = new CachingWorker(thread->getPost(i)->getAttachement().getFileUrl().c_str(),strdup(outfilename.c_str()),true,true);
-
-            worker[i]->moveToThread(qThread[i]);
-
-            mapper->setMapping(qThread[i], download_started);
-
-            connect(qThread[i], SIGNAL(started()), worker[i], SLOT(process()));
-            connect(worker[i], SIGNAL(finished()), qThread[i], SLOT(quit()));
-            connect(worker[i], SIGNAL(finished()), worker[i], SLOT(deleteLater()));
-            connect(qThread[i], SIGNAL(finished()),qThread[i], SLOT(deleteLater()));
-            connect(worker[i], SIGNAL(finished()),mapper_dump, SLOT(map()));
-            qThread[i]->start();
-
-            //outputInfo("DEBUG","Starting Thread" + intToString(download_started),LEVEL_THREAD);
-
-            download_started++;
-        }
-    }
-
+    connect(qThread, SIGNAL(started()), worker, SLOT(process()));
+    connect(worker, SIGNAL(finished()), qThread, SLOT(quit()));
+    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    connect(qThread, SIGNAL(finished()),qThread, SLOT(deleteLater()));
+    connect(worker, SIGNAL(download_status(int,int)),this, SLOT(download_finished(int,int)));
+    qThread->start();
 }
 
-void ThreadWidget::download_finished(int i)
+void ThreadWidget::download_finished(int downloaded, int count)
 {
-    //outputInfo("DEBUG","Closing Thread" + intToString(i),LEVEL_THREAD);
-
-    download_finished_count++;
-
-    if(download_finished_count == download_started)
+    if(download_finished_count < count)
     {
-        push_button_dump_thread->setEnabled(true);
-        push_button_dump_thread->setText(QString("Dump thread"));
+        push_button_dump_thread->setDisabled(true);
+        push_button_dump_thread->setText(QString("Dumping ") + QString::number(downloaded) + QString("/") + QString::number(count));
     }
     else
     {
-        push_button_dump_thread->setDisabled(true);
-        push_button_dump_thread->setText(QString("Dumping ") + QString::number(download_finished_count) + QString("/") + QString::number(download_started));
+        push_button_dump_thread->setEnabled(true);
+        push_button_dump_thread->setText(QString("Dump thread"));
     }
 }
 

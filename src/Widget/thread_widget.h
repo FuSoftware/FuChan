@@ -5,6 +5,7 @@
 #include <thread.h>
 #include "post_widget.h"
 #include "widget.h"
+#include "../Workers/thread_dumping_worker.h"
 
 class Widget;
 
@@ -17,7 +18,6 @@ public:
     void load();
 
     QSignalMapper *mapper;
-    QSignalMapper *mapper_dump;
     std::string thread_board;
     int thread_id;
 
@@ -34,8 +34,8 @@ public:
     QVBoxLayout *mainLayout;
     QGridLayout *secondaryLayout;
 
-    QThread *qThread[MAX_POST_NUMBER];
-    CachingWorker *worker[MAX_POST_NUMBER];
+    QThread *qThread;
+    ThreadDumpingWorker *worker;
 
 signals:
 
@@ -44,7 +44,7 @@ public slots:
    void setViewer(int sender);
    void toggleFavourite(bool state);
    void dump_thread();
-   void download_finished(int i);
+   void download_finished(int downloaded, int count);
 
 private:
    int download_started;

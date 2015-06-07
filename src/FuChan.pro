@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     Widget/option_widget.cpp \
     fileutils.cpp \
     Workers/caching_worker.cpp \
-    stats.cpp
+    stats.cpp \
+    Workers/thread_dumping_worker.cpp
 
 HEADERS  += widget.h \
     fonctions_json.h \
@@ -69,7 +70,8 @@ HEADERS  += widget.h \
     Widget/option_widget.h \
     fileutils.h \
     Workers/caching_worker.h \
-    stats.h
+    stats.h \
+    Workers/thread_dumping_worker.h
 
 DISTFILES += \
     json/sconscript
