@@ -5,6 +5,8 @@
 // --- CONSTRUCTOR ---
 ThreadDumpingWorker::ThreadDumpingWorker(std::vector<Post *> posts, std::string folder)
 {
+    checkFolder(folder);
+
     download_finished = 0;
     threads_started = 0;
     to_download = 0;
@@ -52,7 +54,7 @@ void ThreadDumpingWorker::process()
             outfilename = folder + posts.at(i)->getAttachement().getFileNameExt();
 
             qThreads.push_back(new QThread(this));
-            workers.push_back(new CachingWorker(posts.at(i)->getAttachement().getFileUrl().c_str(),strdup(outfilename.c_str()),true,true));
+            workers.push_back(new CachingWorker(posts.at(i)->getAttachement().getFileUrl().c_str(),strdup(outfilename.c_str()),false,true));
 
             connect(qThreads.at(j), SIGNAL(started()), workers.at(j), SLOT(process()));
             connect(workers.at(j), SIGNAL(finished()), qThreads.at(j), SLOT(quit()));
@@ -60,6 +62,8 @@ void ThreadDumpingWorker::process()
             connect(qThreads.at(j), SIGNAL(finished()),qThreads.at(j), SLOT(deleteLater()));
 
             connect(workers.at(j), SIGNAL(finished()), this, SLOT(downloadFinished()));
+
+            workers.at(j)->moveToThread(qThreads.at(j));
 
             j++;
         }
@@ -83,10 +87,6 @@ void ThreadDumpingWorker::downloadFinished()
 {
     download_finished++;
     increaseDownloadedPicture();
-
-    outputInfo("DEBUG",
-                       "Dumped " +intToString(download_finished) + "/" + intToString(post_count),
-                       LEVEL_TOP_WIDGET);
 
     emit download_status(download_finished,post_count);
 
