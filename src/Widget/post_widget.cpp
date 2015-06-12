@@ -84,7 +84,7 @@ void PostWidget::load_post()
 
         checkFolder(std::string(CACHE_PATH) + post_data->getAttachement().getBoard() + "/thumbs/");
         qThread = new QThread(this);
-        worker = new CachingWorker(post_data->getAttachement().getThumbUrl().c_str(),strdup(post_data->getAttachement().getThumbPath().c_str()),true,true);
+        worker = new CachingWorker(post_data->getAttachement().getThumbUrl().c_str(),strdup(post_data->getAttachement().getThumbPath().c_str()),false,true);
 
         worker->moveToThread(qThread);
 
@@ -100,10 +100,6 @@ void PostWidget::load_post()
     {
         comment->setMaximumHeight(100);
     }
-
-    outputInfo("INFO",
-               std::string("Post ") + ULintToString(post_data->getNo()) + std::string(" loaded"),
-               LEVEL_POST);
 }
 
 void PostWidget::load_thumbnail()
