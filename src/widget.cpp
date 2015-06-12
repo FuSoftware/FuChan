@@ -41,14 +41,38 @@ void Widget::loadThread()
 {
     thread_widget = new ThreadWidget(select_widget->getBoard().c_str(),select_widget->getThread(),false,select_widget->getPicsOnly(), this);
 
-    tab_widget->addTab(thread_widget,QString("/") +QString(select_widget->getBoard().c_str()) +QString("/") + QString::number(select_widget->getThread()));
+    QString name;
+    Thread* thread = thread_widget->getThread();
+
+    if(thread->hasTitle())
+    {
+        name = QString(thread->getTitle().c_str());
+    }
+    else
+    {
+        name = QString("/") +QString(select_widget->getBoard().c_str()) +QString("/") + QString::number(thread->getThreadID());
+    }
+
+    tab_widget->addTab(thread_widget,name);
 }
 
 void Widget::loadThread(int thread_index)
 {
     thread_widget = new ThreadWidget(select_widget->getBoard().c_str(),select_widget->getThreadIDFromIndex(thread_index),false,select_widget->getPicsOnly(),this);
 
-    tab_widget->addTab(thread_widget,QString("/") +QString(select_widget->getBoard().c_str()) +QString("/") + QString::number(select_widget->getThreadIDFromIndex(thread_index)));
+    QString name;
+    Thread* thread = thread_widget->getThread();
+
+    if(thread->hasTitle())
+    {
+        name = QString(thread->getTitle().c_str());
+    }
+    else
+    {
+        name = QString("/") +QString(select_widget->getBoard().c_str()) + QString("/") + QString::number(thread->getThreadID());
+    }
+
+    tab_widget->addTab(thread_widget,name);
 }
 
 void Widget::loadFavourites()
