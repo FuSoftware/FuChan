@@ -70,7 +70,27 @@ Post* Thread::getPost(int i)
     return post_list.at(i);
 }
 
+int Thread::getThreadID()
+{
+    return thread_id;
+}
+
 std::vector<Post*> Thread::getPostList()
 {
     return post_list;
+}
+
+std::string Thread::getTitle()
+{
+    return getPost(0)->getSubject();
+}
+
+std::string Thread::getTitleSimple()
+{
+    return getPost(0)->getSemanticUrl();
+}
+
+bool Thread::hasTitle()
+{
+    return !getPost(0)->getSubject().empty();
 }

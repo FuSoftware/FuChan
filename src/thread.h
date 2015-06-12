@@ -18,7 +18,12 @@ public:
     void load(std::string board, int thread_number);
     int getPostCount();
     Post *getPost(int i);
+    int getThreadID();
     std::vector<Post*> getPostList();
+
+    std::string getTitle();
+    std::string getTitleSimple();
+    bool hasTitle();
 
 private:
     std::vector<Json::Value> posts_json;
