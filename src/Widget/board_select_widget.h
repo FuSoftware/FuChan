@@ -78,6 +78,9 @@ private:
     QHBoxLayout *layoutThread[15];
     QPushButton *label_thread_no[15];
     QLabel *label_thumbnail[15];
+
+    QVBoxLayout *layout_OP_data[15];
+    QLabel *label_title[15];
     QTextBrowser *label_thread_subject[15];
     
     Post *thread_op[MAX_POST_NUMBER];

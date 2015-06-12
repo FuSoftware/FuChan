@@ -74,6 +74,7 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
         label_thumbnail[i] = new QLabel(this);
         label_thread_subject[i]= new QTextBrowser(this);
         label_thread_subject[i]->setText("");
+        label_title[i] = new QLabel(this);
 
         layoutThread[i] = new QHBoxLayout;
 
@@ -83,7 +84,11 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
         label_thumbnail[i]->setPixmap(pixmap.scaled(90,90, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         layoutThread[i]->addWidget(label_thumbnail[i]);
 
-        layoutThread[i]->addWidget(label_thread_subject[i]);
+        layout_OP_data[i] = new QVBoxLayout;
+        layout_OP_data[i]->addWidget(label_title[i],1);
+        layout_OP_data[i]->addWidget(label_thread_subject[i],2);
+
+        layoutThread[i]->addLayout(layout_OP_data[i]);
 
         if(i == 0)
         {
@@ -232,7 +237,7 @@ void BoardSelectWidget::startDownloadThumbnails()
         thread_op[i] = new Post(root["threads"][i]["posts"][0],board);
 
         thumb_thread[i] = new QThread(this);
-        thumb_worker[i] = new CachingWorker(thread_op[i]->getAttachement().getThumbUrl().c_str(),strdup(thread_op[i]->getAttachement().getThumbPath().c_str()),true,false,i);
+        thumb_worker[i] = new CachingWorker(thread_op[i]->getAttachement().getThumbUrl().c_str(),strdup(thread_op[i]->getAttachement().getThumbPath().c_str()),false,false,i);
 
         thumb_worker[i]->moveToThread(thumb_thread[i]);
 
@@ -265,11 +270,26 @@ void BoardSelectWidget::loadOP(int index)
 
     /*Loading new objects*/
     layoutThread[index] = new QHBoxLayout;
+    layout_OP_data[index] = new QVBoxLayout;
 
     label_thread_no[index] = new QPushButton(ULintToString(thread_op[index]->getNo()).c_str(), this);
     label_thumbnail[index] = new QLabel(this);
+    label_title[index] = new QLabel(this);
+    label_title[index]->setStyleSheet("QLabel { color : blue; }");
     label_thread_subject[index]= new QTextBrowser(this);
     label_thread_subject[index]->setText(thread_op[index]->getCom().c_str());
+
+    if(!thread_op[index]->getSubject().empty())
+    {
+        label_title[index]->setText(thread_op[index]->getSubject().c_str());
+        layout_OP_data[index]->addWidget(label_title[index],1);
+        layout_OP_data[index]->addWidget(label_thread_subject[index],2);
+    }
+    else
+    {
+        layout_OP_data[index]->addWidget(label_thread_subject[index]);
+    }
+
 
     layoutThread[index]->addWidget(label_thread_no[index]);
 
@@ -281,7 +301,7 @@ void BoardSelectWidget::loadOP(int index)
         layoutThread[index]->addWidget(label_thumbnail[index]);
     }
 
-    layoutThread[index]->addWidget(label_thread_subject[index]);
+    layoutThread[index]->addLayout(layout_OP_data[index]);
 
     /*Setting up layout type*/
     if(index == 0)
