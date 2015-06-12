@@ -92,6 +92,16 @@ std::string Post::getParentBoard()
     return parent_board;
 }
 
+std::string Post::getSubject()
+{
+    return sub;
+}
+
+std::string Post::getSemanticUrl()
+{
+    return this->semantic_url;
+}
+
 
 /*----------*/
 /*Setters*/

@@ -23,6 +23,8 @@ public:
     bool hasAttachement();
     PostedFile getAttachement();
     std::string getParentBoard();
+    std::string getSubject();
+    std::string getSemanticUrl();
 
 private:
     PostedFile attachement;
