@@ -17,6 +17,8 @@ public:
     ~ThreadWidget();
     void load();
 
+    Thread *getThread();
+
     QSignalMapper *mapper;
     std::string thread_board;
     int thread_id;

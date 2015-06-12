@@ -103,6 +103,8 @@ void ThreadWidget::load()
 
     secondaryLayout = new QGridLayout;
 
+    push_button_update->setText(QString("Update (") + QString::number(thread->getPostCount()) + QString(" posts)"));
+
     int row = 0;
 
     int j=0;
@@ -180,16 +182,37 @@ void ThreadWidget::load()
 
 void ThreadWidget::setViewer(int sender)
 {
-    outputInfo("DEBUG",
-               std::string("Loading picture ") + intToString(sender),
-               LEVEL_TOP_WIDGET);
     parent_widget->viewer_widget->load_picture(thread->getPost(sender));
     parent_widget->setTab(1);
 }
 
 void ThreadWidget::dump_thread()
 {
-    std::string folder = std::string(DOWNLOAD_PATH) + thread_board + "/thread_" + intToString(thread_id) + "/";
+    std::string folder;
+    std::string title;
+
+    if(thread->hasTitle())
+    {
+        title = thread->getTitle();
+
+        std::size_t found = title.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_ ");
+
+        if (found != std::string::npos)
+        {
+            folder = std::string(DOWNLOAD_PATH) + thread_board + "/" + thread->getTitleSimple() + "/";
+        }
+        else
+        {
+            folder = std::string(DOWNLOAD_PATH) + thread_board + "/" + title + "/";
+        }
+    }
+    else
+    {
+        folder = std::string(DOWNLOAD_PATH) + thread_board + "/thread_" + intToString(thread_id) + "/";
+    }
+
+    outputInfo("DEBUG","Folder : " + folder,LEVEL_TOP_WIDGET);
+
 
     QThread *qThread = new QThread(this);
     ThreadDumpingWorker *worker = new ThreadDumpingWorker(thread->getPostList(),folder);
@@ -206,15 +229,18 @@ void ThreadWidget::dump_thread()
 
 void ThreadWidget::download_finished(int downloaded, int count)
 {
-    if(download_finished_count < count)
-    {
-        push_button_dump_thread->setDisabled(true);
-        push_button_dump_thread->setText(QString("Dumping ") + QString::number(downloaded) + QString("/") + QString::number(count));
-    }
-    else
+    push_button_dump_thread->setDisabled(true);
+    push_button_dump_thread->setText(QString("Dumping ") + QString::number(downloaded) + QString("/") + QString::number(count));
+
+    if(count == downloaded)
     {
         push_button_dump_thread->setEnabled(true);
         push_button_dump_thread->setText(QString("Dump thread"));
     }
+}
+
+Thread* ThreadWidget::getThread()
+{
+    return this->thread;
 }
 
