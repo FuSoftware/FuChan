@@ -6,7 +6,7 @@ It allows browsing all the boards and posts, by an easy search interface.
 
 Searchs are done by the JSON APIs. Thumbnails are cached locally, and are re-used by the program if needed.
 
-This software is still in beta state dut to its heavy unstabilities, but it's still usable, and fast. It is, however, rapidly RAM consuming due to poor memory management in it's source code (Takes about 100 MB every 15 minutes of regular searches).
+This software is still in beta state due to its heavy unstabilities, but it's still usable, and fast. It is, however, rapidly RAM consuming due to poor memory management in its source code (Takes about 100 MB every 15 minutes of regular searches).
 
 ##Features
 <ul>
