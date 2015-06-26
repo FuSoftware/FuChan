@@ -68,6 +68,7 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
     w->setLayout(layoutThreads);
 
     /*Initialisation PostWidgets*/
+    /*
     for(int i = 0;i<15;i++)
     {
         label_thread_no[i] = new QPushButton("Waiting", this);
@@ -103,6 +104,7 @@ BoardSelectWidget::BoardSelectWidget(QWidget *parent) : QWidget(parent)
             layoutThreads->addLayout(layoutThread[i],i-7,1);
         }
     }
+    */
 
     /*Assignation des layouts sur le layout principal*/
     mainLayout->addLayout(layoutTop);
@@ -127,6 +129,7 @@ std::string BoardSelectWidget::generateBoardLabel(std::string board, std::string
     oss << std::setw(3) << std::setiosflags(std::ios_base::left) << board  << " - " << title;
     return oss.str();
 }
+
 
 void BoardSelectWidget::thread_load_toggled()
 {
@@ -155,7 +158,7 @@ int BoardSelectWidget::getThread()
 
 int BoardSelectWidget::getThreadIDFromIndex(int index)
 {
-    return label_thread_no[index]->text().toInt();
+    return op_widgets.at(index)->getID();
 }
 
 void BoardSelectWidget::startLoadingOPs(QString string)
@@ -209,9 +212,11 @@ void BoardSelectWidget::startLoadingOPs()
 
 void BoardSelectWidget::startDownloadThumbnails()
 {
-    /*Deleting qThread*/
-    //qThread->quit();
-    //delete qThread;
+    for(int i=0;i<op_widgets.size();i++)
+    {
+        delete op_widgets.at(i);
+    }
+    op_widgets.clear();
 
     /*Updating loading bar*/
     progresslabel->setText(QString("Loading OPs"));
@@ -253,73 +258,28 @@ void BoardSelectWidget::startDownloadThumbnails()
 
 void BoardSelectWidget::loadOP(int index)
 {
-    /*Stopping QThread*/
-    //thumb_thread[index]->quit();
+    op_widgets.push_back(new OPWidget(thread_op[index],index,this));
+    op_widgets_ids.push_back(index);
 
-    /*Delete loading QThread and Worker*/
-    //delete thumb_thread[index];
-    //delete thumb_worker[index];
-
-    /*Deleting previous objects*/
-    /*
-    delete label_thread_no[index];
-    delete label_thumbnail[index];
-    delete label_thread_subject[index];
-    delete layoutThread[index];
-    */
-
-    /*Loading new objects*/
-    layoutThread[index] = new QHBoxLayout;
-    layout_OP_data[index] = new QVBoxLayout;
-
-    label_thread_no[index] = new QPushButton(ULintToString(thread_op[index]->getNo()).c_str(), this);
-    label_thumbnail[index] = new QLabel(this);
-    label_title[index] = new QLabel(this);
-    label_title[index]->setStyleSheet("QLabel { color : blue; }");
-    label_thread_subject[index]= new QTextBrowser(this);
-    label_thread_subject[index]->setText(thread_op[index]->getCom().c_str());
-
-    if(!thread_op[index]->getSubject().empty())
-    {
-        label_title[index]->setText(thread_op[index]->getSubject().c_str());
-        layout_OP_data[index]->addWidget(label_title[index],1);
-        layout_OP_data[index]->addWidget(label_thread_subject[index],2);
-    }
-    else
-    {
-        layout_OP_data[index]->addWidget(label_thread_subject[index]);
-    }
-
-
-    layoutThread[index]->addWidget(label_thread_no[index]);
-
-    /*Loading OP's thumbnail*/
-    if(thread_op[index]->hasAttachement())
-    {
-        QPixmap pixmap = QPixmap(thread_op[index]->getAttachement().getThumbPath().c_str());
-        label_thumbnail[index]->setPixmap(pixmap.scaled(100,100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        layoutThread[index]->addWidget(label_thumbnail[index]);
-    }
-
-    layoutThread[index]->addLayout(layout_OP_data[index]);
+    int current_index = op_widgets.size()-1;
 
     /*Setting up layout type*/
     if(index == 0)
     {
-        layoutThreads->addLayout(layoutThread[index],0,0,1,2);
+        layoutThreads->addWidget(op_widgets.at(current_index),0,0,1,2);
     }
     else if(index < 8)
     {
-        layoutThreads->addLayout(layoutThread[index],index,0);
+        layoutThreads->addWidget(op_widgets.at(current_index),index,0);
     }
     else
     {
-        layoutThreads->addLayout(layoutThread[index],index-7,1);
+        layoutThreads->addWidget(op_widgets.at(current_index),index-7,1);
     }
 
     /*Linking to mapper*/
-    mapper->setMapping(label_thread_no[index], index);
-    connect(label_thread_no[index], SIGNAL(clicked()), mapper , SLOT(map()));
+    mapper->setMapping(op_widgets.at(current_index), index);
+    connect(op_widgets.at(current_index)->label_thread_no, SIGNAL(clicked()), mapper , SLOT(map()));
 
     loaded_posts++;
 
@@ -328,5 +288,5 @@ void BoardSelectWidget::loadOP(int index)
     progresslabel->setText(QString("Loaded OP ") + QString::number(loaded_posts) + QString("/") + QString::number(post_number));
 
     /*Deleting Post* var*/
-    delete thread_op[index];
+    //delete thread_op[index];
 }

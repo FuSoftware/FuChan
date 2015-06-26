@@ -9,6 +9,8 @@
 #include "clickableLabel.h"
 #include "Workers/caching_worker.h"
 
+#include "op_widget.h"
+
 #include <vector>
 #include <ostream>
 #include <iomanip>
@@ -43,6 +45,7 @@ public slots:
     void loadOP(int index);
     
 private:
+    std::vector<int> op_widgets_ids;
     std::vector<std::string> board_labels;
     std::vector<std::string> board_list;
     std::string url;
@@ -75,13 +78,8 @@ private:
     
     QWidget *w;
     QGridLayout *layoutThreads;
-    QHBoxLayout *layoutThread[15];
-    QPushButton *label_thread_no[15];
-    QLabel *label_thumbnail[15];
 
-    QVBoxLayout *layout_OP_data[15];
-    QLabel *label_title[15];
-    QTextBrowser *label_thread_subject[15];
+    QList<OPWidget*> op_widgets;
     
     Post *thread_op[MAX_POST_NUMBER];
 
