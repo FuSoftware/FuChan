@@ -8,6 +8,7 @@
 #include "Widget/viewer_widget.h"
 #include "Widget/closable_tab_widget.h"
 #include "Widget/option_widget.h"
+#include "Widget/catalog_widget.h"
 
 #include "json/json.h"
 #include "fonctions_json.h"
@@ -37,6 +38,7 @@ private:
     BoardSelectWidget *select_widget;
     ThreadWidget *thread_widget;
     OptionWidget *option_widget;
+    CatalogWidget *catalog_widget;
 
     QTextBrowser *textBrowserLog;
 };

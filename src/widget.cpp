@@ -8,10 +8,12 @@ Widget::Widget(QWidget *parent)
     select_widget = new BoardSelectWidget(this);
     viewer_widget = new ViewerWidget(this);
     option_widget = new OptionWidget(this);
+    catalog_widget = new CatalogWidget(this);
 
     tab_widget->addTab(select_widget,"Search");
+    tab_widget->addTab(catalog_widget,"Catalogs");
     tab_widget->addTab(viewer_widget,"Viewer");
-    tab_widget->addTab(option_widget,"Options");
+    tab_widget->addTab(option_widget,"Options");    
 
     tab_widget->setTabsClosable(true);
 

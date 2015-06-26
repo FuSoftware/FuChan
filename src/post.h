@@ -26,6 +26,9 @@ public:
     std::string getSubject();
     std::string getSemanticUrl();
 
+    int getImages();
+    int getReplies();
+
 private:
     PostedFile attachement;
     bool has_attachement;

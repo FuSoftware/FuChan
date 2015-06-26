@@ -3,7 +3,7 @@
 
 #define DEBUG 0
 
-#define APP_VERSION "0.18.3.0"
+#define APP_VERSION "0.19.0.0"
 #define APP_NAME "FuChan"
 
 
@@ -44,9 +44,14 @@
 
 #define BoardURL  "https://a.4cdn.org/boards.json"
 
-#define SearchTabIndex 0
-#define ViewerTabIndex 1
-#define OptionTabIndex 2
+enum TabIndexes
+{
+    SEARCH_TAB_INDEX =0,
+    VIEWER_TAB_INDEX,
+    OPTION_TAB_INDEX,
+    CATALOG_TAB_INDEX,
+    INDEX_LIST_END
+};
 
 enum InfoLevel
 {

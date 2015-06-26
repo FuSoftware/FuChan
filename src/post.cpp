@@ -102,6 +102,16 @@ std::string Post::getSemanticUrl()
     return this->semantic_url;
 }
 
+int Post::getImages()
+{
+    return this->images;
+}
+
+int Post::getReplies()
+{
+    return this->replies;
+}
+
 
 /*----------*/
 /*Setters*/

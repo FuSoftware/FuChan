@@ -38,7 +38,10 @@ SOURCES += main.cpp\
     fileutils.cpp \
     Workers/caching_worker.cpp \
     stats.cpp \
-    Workers/thread_dumping_worker.cpp
+    Workers/thread_dumping_worker.cpp \
+    Widget/catalog_widget.cpp \
+    Widget/op_widget.cpp \
+    Widget/catalog_op_widget.cpp
 
 HEADERS  += widget.h \
     fonctions_json.h \
@@ -71,7 +74,10 @@ HEADERS  += widget.h \
     fileutils.h \
     Workers/caching_worker.h \
     stats.h \
-    Workers/thread_dumping_worker.h
+    Workers/thread_dumping_worker.h \
+    Widget/catalog_widget.h \
+    Widget/op_widget.h \
+    Widget/catalog_op_widget.h
 
 DISTFILES += \
     json/sconscript
