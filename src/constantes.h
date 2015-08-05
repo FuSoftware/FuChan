@@ -3,7 +3,7 @@
 
 #define DEBUG 0
 
-#define APP_VERSION "0.19.0.0"
+#define APP_VERSION "0.19.4.0"
 #define APP_NAME "FuChan"
 
 

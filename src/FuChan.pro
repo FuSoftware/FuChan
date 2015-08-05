@@ -41,7 +41,9 @@ SOURCES += main.cpp\
     Workers/thread_dumping_worker.cpp \
     Widget/catalog_widget.cpp \
     Widget/op_widget.cpp \
-    Widget/catalog_op_widget.cpp
+    Widget/catalog_op_widget.cpp \
+    thread_url.cpp \
+    Utils/download_indexer.cpp
 
 HEADERS  += widget.h \
     fonctions_json.h \
@@ -77,14 +79,16 @@ HEADERS  += widget.h \
     Workers/thread_dumping_worker.h \
     Widget/catalog_widget.h \
     Widget/op_widget.h \
-    Widget/catalog_op_widget.h
+    Widget/catalog_op_widget.h \
+    thread_url.h \
+    Utils/download_indexer.h
 
 DISTFILES += \
     json/sconscript
 
 win32:{
-LIBS += "E:/Qt/Qt5.4.1/5.4/mingw491_32/lib/libcurl.a"
-LIBS += "E:/Qt/Qt5.4.1/5.4/mingw491_32/lib/libcurldll.a"
+LIBS += "F:/Qt/Qt5.5.0/5.5/mingw492_32/lib/libcurl.a"
+LIBS += "F:/Qt/Qt5.5.0/5.5/mingw492_32/lib/libcurldll.a"
 }
 
 linux:{
