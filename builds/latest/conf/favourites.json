@@ -1,19 +1,12 @@
 [
    null,
+   null,
    {
       "board" : "u",
-      "id" : 1648677
+      "id" : 1756739
    },
    {
-      "board" : "wg",
-      "id" : 6114738
+      "id" : null
    },
-   {
-      "board" : "w",
-      "id" : 1738584
-   },
-   {
-      "board" : "w",
-      "id" : 1773046
-   }
+   null
 ]
