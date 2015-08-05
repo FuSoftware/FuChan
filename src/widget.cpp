@@ -1,4 +1,5 @@
 #include "widget.h"
+#include "thread_url.h"
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -41,7 +42,7 @@ Widget::~Widget()
 
 void Widget::loadThread()
 {
-    thread_widget = new ThreadWidget(select_widget->getBoard().c_str(),select_widget->getThread(),false,select_widget->getPicsOnly(), this);
+    thread_widget = new ThreadWidget(select_widget->getThreadUrl().getBoard(),select_widget->getThreadUrl().getID(),false,select_widget->getPicsOnly(), this);
 
     QString name;
     Thread* thread = thread_widget->getThread();
