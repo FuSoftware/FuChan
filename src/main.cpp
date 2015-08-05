@@ -5,6 +5,8 @@
 #include "Widget/board_select_widget.h"
 #include "constantes.h"
 
+#include "Utils/download_indexer.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -15,8 +17,9 @@ int main(int argc, char *argv[])
 
     Widget w;
     w.show();
-
     w.setWindowTitle(QString(APP_NAME) + QString(" ") + QString(APP_VERSION));
+
+    //DownloadIndexer indexer;
 
     return a.exec();
 }

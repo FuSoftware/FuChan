@@ -39,6 +39,8 @@ OPWidget::OPWidget(Post* thread_op, int index, QWidget *parent) : QWidget(parent
     layoutThread->addLayout(layout_OP_data);
 
     setLayout(layoutThread);
+
+    connect(label_thread_no,SIGNAL(clicked()),this,SLOT(emit_click()));
 }
 
 OPWidget::~OPWidget()
@@ -49,5 +51,10 @@ OPWidget::~OPWidget()
 int OPWidget::getID()
 {
     return label_thread_no->text().toInt();
+}
+
+void OPWidget::emit_click()
+{
+    emit clicked();
 }
 

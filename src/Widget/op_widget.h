@@ -17,8 +17,10 @@ public:
     int getID();
 
 signals:
+    void clicked();
 
 public slots:
+    void emit_click();
 
 private:
     QHBoxLayout *layoutThread;

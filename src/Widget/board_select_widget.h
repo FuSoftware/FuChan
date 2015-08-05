@@ -8,6 +8,7 @@
 #include "post.h"
 #include "clickableLabel.h"
 #include "Workers/caching_worker.h"
+#include "../thread_url.h"
 
 #include "op_widget.h"
 
@@ -30,6 +31,8 @@ public:
 
     int getThread();
     bool getPicsOnly();
+
+    ThreadURL getThreadUrl();
 
 signals:
     void load_query(int thread_index);
@@ -55,6 +58,8 @@ private:
     int post_number;
     int loaded_posts;
 
+    ThreadURL thread_url;
+
     QSignalMapper *mapper;
 
     QVBoxLayout *searchLayout;
@@ -79,7 +84,7 @@ private:
     QWidget *w;
     QGridLayout *layoutThreads;
 
-    QList<OPWidget*> op_widgets;
+    std::vector<OPWidget*> op_widgets;
     
     Post *thread_op[MAX_POST_NUMBER];
 

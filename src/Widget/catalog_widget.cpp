@@ -107,7 +107,7 @@ void CatalogWidget::startDownloadThumbnails()
 
     if(!thread_ops.empty())
     {
-        for(int i=0;i<thread_ops.size();i++)
+        for(unsigned int i=0;i<thread_ops.size();i++)
         {
             delete thread_ops.at(i);
         }
@@ -138,7 +138,7 @@ void CatalogWidget::startDownloadThumbnails()
         post_number = 0;
     }
 
-    for(int i=0;i<thread_ops.size();i++)
+    for(unsigned int i=0;i<thread_ops.size();i++)
     {
         thumb_threads.push_back(new QThread(this));
         thumb_workers.push_back(new CachingWorker(thread_ops.at(i)->getAttachement().getThumbUrl().c_str(),strdup(thread_ops.at(i)->getAttachement().getThumbPath().c_str()),false,false,i));

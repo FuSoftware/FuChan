@@ -133,6 +133,7 @@ std::string BoardSelectWidget::generateBoardLabel(std::string board, std::string
 
 void BoardSelectWidget::thread_load_toggled()
 {
+    thread_url.parse_url(this->lineEditThread->text().toStdString());
     emit load_query();
 }
 
@@ -217,6 +218,7 @@ void BoardSelectWidget::startDownloadThumbnails()
         delete op_widgets.at(i);
     }
     op_widgets.clear();
+    op_widgets.resize(15);
 
     /*Updating loading bar*/
     progresslabel->setText(QString("Loading OPs"));
@@ -258,28 +260,25 @@ void BoardSelectWidget::startDownloadThumbnails()
 
 void BoardSelectWidget::loadOP(int index)
 {
-    op_widgets.push_back(new OPWidget(thread_op[index],index,this));
-    op_widgets_ids.push_back(index);
-
-    int current_index = op_widgets.size()-1;
+    op_widgets.insert(op_widgets.begin() + index, new OPWidget(thread_op[index],index,this));
 
     /*Setting up layout type*/
     if(index == 0)
     {
-        layoutThreads->addWidget(op_widgets.at(current_index),0,0,1,2);
+        layoutThreads->addWidget(op_widgets.at(index),0,0,1,2);
     }
     else if(index < 8)
     {
-        layoutThreads->addWidget(op_widgets.at(current_index),index,0);
+        layoutThreads->addWidget(op_widgets.at(index),index,0);
     }
     else
     {
-        layoutThreads->addWidget(op_widgets.at(current_index),index-7,1);
+        layoutThreads->addWidget(op_widgets.at(index),index-7,1);
     }
 
     /*Linking to mapper*/
-    mapper->setMapping(op_widgets.at(current_index), index);
-    connect(op_widgets.at(current_index)->label_thread_no, SIGNAL(clicked()), mapper , SLOT(map()));
+    mapper->setMapping(op_widgets.at(index), index);
+    connect(op_widgets.at(index), SIGNAL(clicked()), mapper , SLOT(map()));
 
     loaded_posts++;
 
@@ -287,6 +286,9 @@ void BoardSelectWidget::loadOP(int index)
     progressBar->setValue(((loaded_posts+1)*100)/post_number);
     progresslabel->setText(QString("Loaded OP ") + QString::number(loaded_posts) + QString("/") + QString::number(post_number));
 
-    /*Deleting Post* var*/
-    //delete thread_op[index];
+}
+
+ThreadURL BoardSelectWidget::getThreadUrl()
+{
+    return this->thread_url;
 }
